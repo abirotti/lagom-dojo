@@ -20,6 +20,14 @@ class HellolagomServiceImpl(persistentEntityRegistry: PersistentEntityRegistry) 
     ref.ask(Hello(id))
   }
 
+  override def helloFull(name: String, surname: String) = ServiceCall { _ =>
+    // Look up the hello-lagom entity for the given ID.
+    val ref = persistentEntityRegistry.refFor[HellolagomEntity](name)
+
+    // Ask the entity the Hello command.
+    ref.ask(Hello(name, surname))
+  }
+
   override def useGreeting(id: String) = ServiceCall { request =>
     // Look up the hello-lagom entity for the given ID.
     val ref = persistentEntityRegistry.refFor[HellolagomEntity](id)

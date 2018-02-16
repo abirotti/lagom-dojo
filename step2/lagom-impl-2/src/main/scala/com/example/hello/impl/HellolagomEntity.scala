@@ -61,10 +61,15 @@ class HellolagomEntity extends PersistentEntity {
     }.onReadOnlyCommand[Hello, String] {
 
       // Command handler for the Hello command
-      case (Hello(name), ctx, state) =>
+      case (Hello(name, surname), ctx, state) =>
         // Reply with a message built from the current message, and the name of
         // the person we're meant to say hello to.
-        ctx.reply(s"$message, $name!")
+        def valueIfDefined(option: Option[String]) = {
+          if (option.isDefined)
+            s" ${option.get}"
+          else ""
+        }
+        ctx.reply(s"$message, $name${valueIfDefined(surname)}!")
 
     }.onEvent {
 
@@ -156,10 +161,12 @@ object UseGreetingMessage {
   * The reply type is String, and will contain the message to say to that
   * person.
   */
-case class Hello(name: String) extends HellolagomCommand[String]
+case class Hello(name: String, surname: Option[String]) extends HellolagomCommand[String]
 
 object Hello {
 
+  def apply(name: String): Hello = Hello(name, None)
+  def apply(name: String, surname: String): Hello = Hello(name, Some(surname))
   /**
     * Format for the hello command.
     *

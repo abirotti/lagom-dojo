@@ -19,6 +19,8 @@ trait HellolagomService extends Service {
 //  def hello(id: String): ServiceCall[NotUsed, String]
   def hello(id: String): ServiceCall[NotUsed, String]
 
+  def helloFull(name: String, surname: String): ServiceCall[NotUsed, String]
+
   /**
     * Example: curl -H "Content-Type: application/json" -X POST -d '{"message":
     * "Hi"}' http://localhost:9000/api/hello/Alice
@@ -37,6 +39,7 @@ trait HellolagomService extends Service {
     named("hello-lagom")
       .withCalls(
         pathCall("/api/hello/:id", hello _),
+        pathCall("/api/hello/:name/:surname", helloFull _),
         pathCall("/api/hello/:id", useGreeting _)
       )
       .withTopics(

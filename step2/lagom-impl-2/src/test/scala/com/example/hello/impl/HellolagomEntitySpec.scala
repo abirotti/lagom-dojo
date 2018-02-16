@@ -28,6 +28,11 @@ class HellolagomEntitySpec extends WordSpec with Matchers with BeforeAndAfterAll
       outcome.replies should contain only "Hello, Alice!"
     }
 
+    "say hello to a fully specified person" in withTestDriver { driver =>
+      val outcome = driver.run(Hello("Alice", "Bobadottir"))
+      outcome.replies should contain only "Hello, Alice Bobadottir!"
+    }
+
     "allow updating the greeting message" in withTestDriver { driver =>
       val outcome1 = driver.run(UseGreetingMessage("Hi"))
       outcome1.events should contain only GreetingMessageChanged("Hi")
