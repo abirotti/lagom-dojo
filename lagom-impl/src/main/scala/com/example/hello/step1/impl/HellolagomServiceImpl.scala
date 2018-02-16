@@ -1,7 +1,7 @@
-package com.example.hello.impl
+package com.example.hello.step1.impl
 
-import com.example.hello.api
-import com.example.hello.api.{HellolagomService}
+import com.example.hello.step1
+import com.example.hello.step1.api.HellolagomService
 import com.lightbend.lagom.scaladsl.api.ServiceCall
 import com.lightbend.lagom.scaladsl.api.broker.Topic
 import com.lightbend.lagom.scaladsl.broker.TopicProducer
@@ -29,16 +29,16 @@ class HellolagomServiceImpl(persistentEntityRegistry: PersistentEntityRegistry) 
   }
 
 
-  override def greetingsTopic(): Topic[api.GreetingMessageChanged] =
+  override def greetingsTopic(): Topic[step1.api.GreetingMessageChanged] =
     TopicProducer.singleStreamWithOffset {
       fromOffset =>
         persistentEntityRegistry.eventStream(HellolagomEvent.Tag, fromOffset)
           .map(ev => (convertEvent(ev), ev.offset))
     }
 
-  private def convertEvent(helloEvent: EventStreamElement[HellolagomEvent]): api.GreetingMessageChanged = {
+  private def convertEvent(helloEvent: EventStreamElement[HellolagomEvent]): step1.api.GreetingMessageChanged = {
     helloEvent.event match {
-      case GreetingMessageChanged(msg) => api.GreetingMessageChanged(helloEvent.entityId, msg)
+      case GreetingMessageChanged(msg) => step1.api.GreetingMessageChanged(helloEvent.entityId, msg)
     }
   }
 }

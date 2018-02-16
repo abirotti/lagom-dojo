@@ -1,6 +1,8 @@
 target
 ideatarget
 .target
+.idea
+sbt-dist
 bin
 .cache
 .cache-main

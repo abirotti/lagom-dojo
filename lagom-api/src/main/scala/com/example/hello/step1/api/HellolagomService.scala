@@ -1,4 +1,4 @@
-package com.example.hello.api
+package com.example.hello.step1.api
 
 import akka.{Done, NotUsed}
 import com.lightbend.lagom.scaladsl.api.broker.Topic

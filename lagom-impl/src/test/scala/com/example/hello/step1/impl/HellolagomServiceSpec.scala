@@ -1,9 +1,9 @@
-package com.example.hello.impl
+package com.example.hello.step1.impl
 
+import com.example.hello.step1.api.{GreetingMessage, HellolagomService}
 import com.lightbend.lagom.scaladsl.server.LocalServiceLocator
 import com.lightbend.lagom.scaladsl.testkit.ServiceTest
 import org.scalatest.{AsyncWordSpec, BeforeAndAfterAll, Matchers}
-import com.example.hello.api._
 
 class HellolagomServiceSpec extends AsyncWordSpec with Matchers with BeforeAndAfterAll {
 
