@@ -8,16 +8,16 @@ val macwire = "com.softwaremill.macwire" %% "macros" % "2.3.0" % "provided"
 val scalaTest = "org.scalatest" %% "scalatest" % "3.0.4" % Test
 
 lazy val `lagom-dojo` = (project in file("."))
-  .aggregate(`lagom-dojo-api`, `lagom-dojo-impl`)
+  .aggregate(`lagom-dojo-api-1`, `lagom-dojo-impl-1`)
 
-lazy val `lagom-dojo-api` = (project in file("lagom-api"))
+lazy val `lagom-dojo-api-1` = (project in file("lagom-api-1"))
   .settings(
     libraryDependencies ++= Seq(
       lagomScaladslApi
     )
   )
 
-lazy val `lagom-dojo-impl` = (project in file("lagom-impl"))
+lazy val `lagom-dojo-impl-1` = (project in file("lagom-impl-1"))
   .enablePlugins(LagomScala)
   .settings(
     libraryDependencies ++= Seq(
@@ -29,4 +29,4 @@ lazy val `lagom-dojo-impl` = (project in file("lagom-impl"))
     )
   )
   .settings(lagomForkedTestSettings: _*)
-  .dependsOn(`lagom-dojo-api`)
+  .dependsOn(`lagom-dojo-api-1`)
