@@ -8,11 +8,14 @@
     (https://www.lagomframework.com/documentation/1.4.x/scala/ServiceDescriptors.html)
     - write a test first: how to support the existing endpoint?
 
-3) now, we cheated in #2 and still saved one string, and returned it. We now want to actually save and return a Person(name: String, surname: String)
+3) now, we cheated in #2 and still saved one string, and returned it. We now want to actually save
+    and return a Person(name: String, surname: String)
+    Extra: Can you enforce the type on the route? (e.g.
+
+________________________________________________________________________________________________________________________
 
 4) elect one of you to break the above in one of two ways:
-    - either you cannot specify a new greeting message, 
-    - or the new message doesn't apply to any further request
+    - either you cannot specify a new greeting message, or the new message doesn't apply to any future request
     - then pair, and have the breaker provide hints
     - what did you learn? what are the advantages of this approach to persistency?
     - (https://www.lagomframework.com/documentation/1.4.x/scala/ES_CQRS.html)

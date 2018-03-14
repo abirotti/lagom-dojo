@@ -10,16 +10,14 @@ object HellolagomService  {
   val TOPIC_NAME = "greetings"
 }
 
-
 trait HellolagomService extends Service {
 
   /**
     * Example: curl http://localhost:9000/api/hello/Alice
     */
-//  def hello(id: String): ServiceCall[NotUsed, String]
   def hello(id: String): ServiceCall[NotUsed, String]
 
-  def helloFull(name: String, surname: String): ServiceCall[NotUsed, String]
+  def helloPerson(name: String, surname: String): ServiceCall[NotUsed, String]
 
   /**
     * Example: curl -H "Content-Type: application/json" -X POST -d '{"message":
@@ -39,7 +37,7 @@ trait HellolagomService extends Service {
     named("hello-lagom")
       .withCalls(
         pathCall("/api/hello/:id", hello _),
-        pathCall("/api/hello/:name/:surname", helloFull _),
+        pathCall("/api/hello/:name/:surname", helloPerson _),
         pathCall("/api/hello/:id", useGreeting _)
       )
       .withTopics(
@@ -89,3 +87,6 @@ object GreetingMessageChanged {
     */
   implicit val format: Format[GreetingMessageChanged] = Json.format[GreetingMessageChanged]
 }
+
+
+case class Person(name: String, surname: String)

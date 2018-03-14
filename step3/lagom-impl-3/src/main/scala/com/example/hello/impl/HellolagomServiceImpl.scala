@@ -1,7 +1,8 @@
 package com.example.hello.impl
 
+import akka.NotUsed
 import com.example.hello.api
-import com.example.hello.api.HellolagomService
+import com.example.hello.api.{HellolagomService, Person}
 import com.lightbend.lagom.scaladsl.api.ServiceCall
 import com.lightbend.lagom.scaladsl.api.broker.Topic
 import com.lightbend.lagom.scaladsl.broker.TopicProducer
@@ -12,20 +13,16 @@ import com.lightbend.lagom.scaladsl.persistence.{EventStreamElement, PersistentE
   */
 class HellolagomServiceImpl(persistentEntityRegistry: PersistentEntityRegistry) extends HellolagomService {
 
-  override def hello(id: String) = ServiceCall { _ =>
-    // Look up the hello-lagom entity for the given ID.
+  override def hello(id: String): ServiceCall[NotUsed, String] = ServiceCall { _ =>
     val ref = persistentEntityRegistry.refFor[HellolagomEntity](id)
 
-    // Ask the entity the Hello command.
     ref.ask(Hello(id))
   }
 
-  override def helloFull(name: String, surname: String) = ServiceCall { _ =>
-    // Look up the hello-lagom entity for the given ID.
-    val ref = persistentEntityRegistry.refFor[HellolagomEntity](name)
+  override def helloPerson(name: String, surname: String): ServiceCall[NotUsed, String] = ServiceCall { _ =>
+    val ref = persistentEntityRegistry.refFor[HellolagomEntity](Person(name, surname).toString)
 
-    // Ask the entity the Hello command.
-    ref.ask(Hello(name, surname))
+    ref.ask(Hello(Person(name, surname)))
   }
 
   override def useGreeting(id: String) = ServiceCall { request =>
@@ -35,7 +32,6 @@ class HellolagomServiceImpl(persistentEntityRegistry: PersistentEntityRegistry) 
     // Tell the entity to use the greeting message specified.
     ref.ask(UseGreetingMessage(request.message))
   }
-
 
   override def greetingsTopic(): Topic[api.GreetingMessageChanged] =
     TopicProducer.singleStreamWithOffset {

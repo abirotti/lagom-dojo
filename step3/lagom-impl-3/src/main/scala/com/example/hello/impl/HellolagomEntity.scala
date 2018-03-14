@@ -3,8 +3,9 @@ package com.example.hello.impl
 import java.time.LocalDateTime
 
 import akka.Done
-import com.lightbend.lagom.scaladsl.persistence.{AggregateEvent, AggregateEventTag, PersistentEntity}
+import com.example.hello.api.Person
 import com.lightbend.lagom.scaladsl.persistence.PersistentEntity.ReplyType
+import com.lightbend.lagom.scaladsl.persistence.{AggregateEvent, AggregateEventTag, PersistentEntity}
 import com.lightbend.lagom.scaladsl.playjson.{JsonSerializer, JsonSerializerRegistry}
 import play.api.libs.json.{Format, Json}
 
@@ -45,31 +46,23 @@ class HellolagomEntity extends PersistentEntity {
     * is a function of the current state to a set of actions.
     */
   override def behavior: Behavior = {
+
     case HellolagomState(message, _) => Actions().onCommand[UseGreetingMessage, Done] {
 
-      // Command handler for the UseGreetingMessage command
       case (UseGreetingMessage(newMessage), ctx, state) =>
-        // In response to this command, we want to first persist it as a
-        // GreetingMessageChanged event
         ctx.thenPersist(
           GreetingMessageChanged(newMessage)
         ) { _ =>
-          // Then once the event is successfully persisted, we respond with done.
           ctx.reply(Done)
         }
 
     }.onReadOnlyCommand[Hello, String] {
 
-      // Command handler for the Hello command
+      case (HelloPerson(person), ctx, state) =>
+        replyWithMessage(message, person.name, Some(person.surname), ctx)
+
       case (Hello(name, surname), ctx, state) =>
-        // Reply with a message built from the current message, and the name of
-        // the person we're meant to say hello to.
-        def valueIfDefined(option: Option[String]) = {
-          if (option.isDefined)
-            s" ${option.get}"
-          else ""
-        }
-        ctx.reply(s"$message, $name${valueIfDefined(surname)}!")
+        replyWithMessage(message, name, surname, ctx)
 
     }.onEvent {
 
@@ -80,6 +73,12 @@ class HellolagomEntity extends PersistentEntity {
         HellolagomState(newMessage, LocalDateTime.now().toString)
 
     }
+  }
+  def replyWithMessage(message: String, name: String, surname: Option[String], ctx: ReadOnlyCommandContext[String]) = {
+    def valueIfDefined(option: Option[String]) =
+      option.map(x => s" $x").getOrElse("")
+
+    ctx.reply(s"$message, $name${valueIfDefined(surname)}!")
   }
 }
 
@@ -162,11 +161,13 @@ object UseGreetingMessage {
   * person.
   */
 case class Hello(name: String, surname: Option[String]) extends HellolagomCommand[String]
+case class HelloPerson(person: Person) extends HellolagomCommand[String]
 
 object Hello {
 
   def apply(name: String): Hello = Hello(name, None)
   def apply(name: String, surname: String): Hello = Hello(name, Some(surname))
+  def apply(person: Person): Hello = Hello(person.name, Some(person.surname))
   /**
     * Format for the hello command.
     *

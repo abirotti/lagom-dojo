@@ -2,8 +2,9 @@ package com.example.hello.impl
 
 import akka.actor.ActorSystem
 import akka.testkit.TestKit
-import com.lightbend.lagom.scaladsl.testkit.PersistentEntityTestDriver
+import com.example.hello.api.Person
 import com.lightbend.lagom.scaladsl.playjson.JsonSerializerRegistry
+import com.lightbend.lagom.scaladsl.testkit.PersistentEntityTestDriver
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 
 class HellolagomEntitySpec extends WordSpec with Matchers with BeforeAndAfterAll {
@@ -30,6 +31,11 @@ class HellolagomEntitySpec extends WordSpec with Matchers with BeforeAndAfterAll
 
     "say hello to a fully specified person" in withTestDriver { driver =>
       val outcome = driver.run(Hello("Alice", "Bobadottir"))
+      outcome.replies should contain only "Hello, Alice Bobadottir!"
+    }
+
+    "say hello to a person" in withTestDriver { driver =>
+      val outcome = driver.run(Hello(Person("Alice", "Bobadottir")))
       outcome.replies should contain only "Hello, Alice Bobadottir!"
     }
 

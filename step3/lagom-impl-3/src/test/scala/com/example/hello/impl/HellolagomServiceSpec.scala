@@ -26,8 +26,8 @@ class HellolagomServiceSpec extends AsyncWordSpec with Matchers with BeforeAndAf
       }
     }
 
-    "say helloFull" in {
-      client.helloFull("Alice", "Bobadottir").invoke().map { answer =>
+    "say hello to a person" in {
+      client.helloPerson("Alice", "Bobadottir").invoke().map { answer =>
         answer should ===("Hello, Alice Bobadottir!")
       }
     }
