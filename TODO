@@ -10,7 +10,7 @@
 
 3) now, we cheated in #2 and still saved one string, and returned it. We now want to actually save
     and return a Person(name: String, surname: String)
-    Extra: Can you enforce the type on the route? (e.g.
+    Extra: Can you enforce the type on the route?
 
 ________________________________________________________________________________________________________________________
 
